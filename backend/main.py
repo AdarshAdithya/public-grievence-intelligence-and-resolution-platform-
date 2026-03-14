@@ -292,7 +292,34 @@ def compute_priority(complaint, all_complaints):
 
     return round(score,2)
 
+@app.get("/track/{complaint_id}")
+def track_complaint(complaint_id: str):
 
+    with open("complaints.json") as f:
+        complaints = json.load(f)
+
+    for c in complaints:
+
+        if c["complaint_id"] == complaint_id:
+
+            from datetime import datetime
+
+            deadline = datetime.strptime(c["deadline"], "%Y-%m-%d")
+            today = datetime.today()
+
+            days_left = (deadline - today).days
+
+            return {
+                "complaint_id": c["complaint_id"],
+                "category": c["category"],
+                "status": c["status"],
+                "created_at": c["created_at"],
+                "deadline": c["deadline"],
+                "days_left": days_left,
+                "description": c["description"]
+            }
+
+    return {"error": "Complaint not found"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)

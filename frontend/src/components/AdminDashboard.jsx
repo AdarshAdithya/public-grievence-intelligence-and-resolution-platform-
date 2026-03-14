@@ -73,14 +73,11 @@ function AdminDashboard() {
 <div className="stat-card">
 
 <span>High Severity</span>
-<div className="stat-card">
-<span>High Severity</span>
 <h2>{analytics.high_severity}</h2>
 </div>
 
 </div>
 
-</div>
 
 )}
 
@@ -114,7 +111,6 @@ function AdminDashboard() {
 <tr>
 <th>ID</th>
 <th>Category</th>
-<th>Priority</th>
 <th>Description</th>
 <th>Location</th>
 <th>Status</th>
@@ -135,7 +131,6 @@ function AdminDashboard() {
 
 <td>{c.complaint_id}</td>
 <td>{c.category}</td>
-<td>{c.priority_score}</td>
 <td>{c.description}</td>
 <td>{c.latitude},{c.longitude}</td>
 <td>{c.status}</td>

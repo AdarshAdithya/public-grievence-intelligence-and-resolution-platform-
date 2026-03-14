@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import ComplaintForm from "./components/ComplaintForm";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminLogin from "./components/AdminLogin";
+import TrackComplaint from "./components/TrackComplaint"; 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -234,7 +235,7 @@ export default function App() {
       <nav className={`nav ${scrolled?"nav-solid":""}`}>
         <div className="nav-logo" onClick={()=>setPage("home")}>
           <span className="logo-gem">◈</span>
-          <span className="logo-text">CivicBridge</span>
+          <span className="logo-text">CivicVoice</span>
         </div>
         <div className="nav-links">
           {[["home","Home"],["citizen","File Complaint"],["admin","Admin"]].map(([id,lbl])=>(
@@ -288,6 +289,11 @@ export default function App() {
               <Tilt3D intensity={12} scale={1.06}>
                 <button className="btn-gold" onClick={()=>setPage("citizen")}>
                   📋&nbsp; File a Complaint &nbsp;<span className="arr">→</span>
+                </button>
+              </Tilt3D>
+              <Tilt3D intensity={8} scale={1.04}>
+                <button className="btn-ghost" onClick={()=>setPage("track")}>
+                  Track Complaint &nbsp;<span className="arr">→</span>
                 </button>
               </Tilt3D>
               <Tilt3D intensity={10} scale={1.04}>
@@ -370,6 +376,19 @@ export default function App() {
           <div className="glass-form"><ComplaintForm/></div>
         </section>
       )}
+      {page==="track" && (
+  <section className="inner">
+    <button className="back-btn" onClick={()=>setPage("home")}>← Back</button>
+    <h2 className="inner-h">Track Your Complaint</h2>
+    <p className="inner-sub">
+      Enter your complaint ID to check status and deadline.
+    </p>
+
+    <div className="glass-form">
+      <TrackComplaint/>
+    </div>
+  </section>
+)}
 
       {page==="admin" && (
         <section className="inner">

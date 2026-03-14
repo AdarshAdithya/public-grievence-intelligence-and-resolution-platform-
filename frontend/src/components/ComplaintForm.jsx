@@ -16,6 +16,15 @@ const CATEGORIES = [
     desc:"Vehicles left without movement for extended periods on public roads." },
   { id:"abandoned_building", emoji:"🏚️", label:"Abandoned Buildings", days:"7–14", color:"#f87171",
     desc:"Derelict structures posing safety hazards to the public." },
+    { id:"broken_streetlight", emoji:"💡", label:"Broken Streetlight", days:"3–5", color:"#fbbf24",
+      desc:"Non-functional streetlights affecting visibility and safety." },
+  { id:"water leakage", emoji:"💧", label:"Water Leakage",       days:"2–4",  color:"#3b82f6",
+    desc:"Burst pipes, water seepage, leaks causing water wastage or damage."
+  },
+  {
+    id:"flooded_road", emoji:"🌊", label:"Flooded Road",        days:"5–10", color:"#60a5fa",
+    desc:"Roads submerged due to heavy rains, poor drainage, causing traffic disruption."
+  }
 ];
 
 const SEVERITIES = [

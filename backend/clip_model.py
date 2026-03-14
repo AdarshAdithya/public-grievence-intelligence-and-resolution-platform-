@@ -49,3 +49,4 @@ def get_severity(issue):
         return "medium"
     else:
         return "low"
+

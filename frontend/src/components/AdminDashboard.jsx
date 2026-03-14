@@ -129,23 +129,15 @@ function AdminDashboard() {
 <td>{c.category}</td>
 <td>{c.description}</td>
 <td>{c.latitude},{c.longitude}</td>
-<td>{c.severity_score?.toFixed(1)}</td>
+<td>{c.severity}</td>
 <td>{c.status}</td>
-
 </tr>
-
 ))}
-
 </tbody>
-
 </table>
-
 </div>
-
 </div>
-
 );
-
 }
 
 export default AdminDashboard;

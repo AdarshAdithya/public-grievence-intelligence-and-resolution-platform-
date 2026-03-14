@@ -45,13 +45,8 @@ url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 key={c.complaint_id}
 position={[c.latitude,c.longitude]}
 />
-
 ))}
-
 </MapContainer>
-
 )
-
 }
-
 export default ComplaintMap

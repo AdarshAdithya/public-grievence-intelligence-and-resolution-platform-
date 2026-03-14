@@ -11,8 +11,20 @@ from clip_model import classify_image, get_severity
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+from datetime import timedelta
 
 app = FastAPI()
+CATEGORY_DEADLINES = {
+    "tree": 4,
+    "garbage": 2,
+    "graffiti": 7,
+    "pothole": 5,
+    "abandoned_vehicle": 7,
+    "abandoned_building": 14,
+    "broken_streetlight": 5,
+    "water leakage": 4,
+    "flooded_road": 10
+}
 
 # -------------------------------
 # CORS
@@ -78,7 +90,11 @@ async def submit_complaint(
         # AI classification
         category = classify_image(image_path)
         severity = get_severity(category)
+    deadline_days = CATEGORY_DEADLINES.get(category, 5)
 
+    deadline_date = (
+    datetime.now() + timedelta(days=deadline_days)
+    ).strftime("%Y-%m-%d")
     complaint = {
         "complaint_id": complaint_id,
         "category": category,
@@ -88,7 +104,10 @@ async def submit_complaint(
         "severity": severity,
         "status": "Pending",
         "image": image_path,
-        "created_at": datetime.now().strftime("%Y-%m-%d")
+        "created_at": datetime.now().strftime("%Y-%m-%d"),
+        "created_time": datetime.now().strftime("%H:%M:%S"),
+        "timestamp": datetime.now().isoformat(),
+        "deadline": deadline_date
     }
 
     complaints.append(complaint)
@@ -109,9 +128,15 @@ async def submit_complaint(
 
 @app.get("/complaints")
 def get_complaints():
-    return load_complaints()
 
+    complaints = load_complaints()
 
+    complaints.sort(
+    key=lambda x: x["created_at"],
+    reverse=True
+)
+
+    return complaints
 # ------------------------------------------------
 # ANALYTICS
 # ------------------------------------------------
@@ -218,6 +243,55 @@ def analytics():
 @app.get("/")
 def root():
     return {"status": "API running"}
+
+
+from datetime import datetime
+
+def compute_priority(complaint, all_complaints):
+
+    score = 0
+
+    # 1️⃣ Severity weight
+    severity = complaint.get("severity_score",0)
+
+    score += severity * 50
+
+
+    # 2️⃣ Waiting time weight
+    created = datetime.strptime(complaint["created_at"], "%Y-%m-%d")
+
+    days_waiting = (datetime.now() - created).days
+
+    score += days_waiting * 5
+
+
+    # 3️⃣ Deadline urgency
+    deadline = datetime.strptime(complaint["deadline"], "%Y-%m-%d")
+
+    days_left = (deadline - datetime.now()).days
+
+    if days_left <= 1:
+        score += 25
+    elif days_left <= 3:
+        score += 10
+
+
+    # 4️⃣ Nearby complaints (hotspot detection)
+
+    lat = complaint["latitude"]
+    lon = complaint["longitude"]
+
+    nearby = 0
+
+    for c in all_complaints:
+
+        if abs(c["latitude"]-lat) < 0.01 and abs(c["longitude"]-lon) < 0.01:
+            nearby += 1
+
+    score += nearby * 3
+
+    return round(score,2)
+
 
 
 if __name__ == "__main__":
